@@ -4,30 +4,17 @@ import { FaBarsStaggered } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import NavLinks from './NavLinks';
 import { useSelector } from 'react-redux';
+import { toggleTheme } from '../features/user/userSlice';
+import { useDispatch } from 'react-redux';
 
-const themes = { winter: 'winter', dracula: 'dracula' }
 
-const getThemeFromLocalStorage = () => {
-    return localStorage.getItem('theme') || themes.dracula;
-}
 
 const Navbar = () => {
-    const [theme, setTheme] = useState(getThemeFromLocalStorage());
+    const dispatch = useDispatch();
 
     const handleTheme = () => {
-        const { winter, dracula } = themes;
-
-        const newTheme = theme === winter ? dracula : winter;
-
-        setTheme(newTheme);
+        dispatch(toggleTheme())
     }
-
-    useEffect(() => {
-
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-
-    }, [theme])
 
     const numItemsCart = useSelector((state) => state.cartState.numItemsInCart)
 
@@ -57,9 +44,9 @@ const Navbar = () => {
                 <label className="swap swap-rotate">
                     <input type="checkbox" onChange={handleTheme} />
                     {/* sun icon */}
-                    <BsSunFill className='swap-on h-4 w-4' />
+                    <BsSunFill className='swap-off h-4 w-4' />
                     {/* moon icon */}
-                    <BsMoonFill className='swap-off h-4 w-4' />
+                    <BsMoonFill className='swap-on h-4 w-4' />
                 </label>
                 {/* CART LINK */}
                 <NavLink to="/cart" className="btn btn-ghost btn-circle btn-md ml-4" >
