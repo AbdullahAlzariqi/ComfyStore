@@ -6,22 +6,33 @@ import {
 import { ErrorElement } from './components';
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // loaders
 import { loader as landingLoader } from './pages/Landing';
 import { loader as singleProductLoader } from './pages/SingleProduct';
 import { loader as productsLoader } from './pages/Products';
+import { loader as CheckoutLoader } from './pages/Checkout';
+import { loader as orderLoader } from './pages/Orders';
 
 
 
 //actions
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
+import { action as checkoutAction } from './components/CheckoutForm';
 import { store } from './store';
 store
 
 
-
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5 //in melliseconds 
+    }
+  }
+})
 
 const router = createBrowserRouter([
   {
@@ -33,11 +44,12 @@ const router = createBrowserRouter([
         index: true,
         element: <Landing />,
         errorElement: <ErrorElement />,
-        loader: landingLoader,
+        loader: landingLoader(queryClient),
       },
       {
         path: "/orders",
         element: <Orders />,
+        loader: orderLoader(store, queryClient)
       },
       {
         path: "/about",
@@ -50,18 +62,20 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <Checkout />,
+        loader: CheckoutLoader(store),
+        action: checkoutAction(store, queryClient)
       },
       {
         path: "/products",
         element: <Products />,
         errorElement: <Error />,
-        loader: productsLoader,
+        loader: productsLoader(queryClient),
       },
       {
         path: "/products/:id",
         element: <SingleProduct />,
         errorElement: <Error />,
-        loader: singleProductLoader,
+        loader: singleProductLoader(queryClient),
       },
     ]
   },
@@ -83,7 +97,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </>
   )
 }

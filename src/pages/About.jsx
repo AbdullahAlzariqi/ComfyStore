@@ -17,7 +17,7 @@ const About = () => {
         </div>
 
         <p className="mt-6 text-lg leading-8 max-w-2xl mx-auto">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam rem consectetur accusamus quidem perspiciatis, tenetur, architecto, delectus a sunt molestias quibusdam porro nesciunt omnis eaque veritatis voluptatibus! Quae, velit laboriosam!
+            Comfy, founded in 2019, is a family-owned furniture company dedicated to crafting stylish and supremely comfortable pieces for every home. Using top-quality materials and thoughtful design, we offer a diverse selection of furniture to suit any taste, all backed by exceptional customer service and a commitment to making your house a true haven of relaxation.
         </p>
     </>
 }

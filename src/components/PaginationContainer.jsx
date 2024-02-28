@@ -6,7 +6,6 @@ const PaginationContainer = () => {
     const { meta } = useLoaderData();
 
     const { page, pageCount } = meta.pagination;
-    console.log(page);
 
     const pages = Array.from({ length: pageCount }, (_, index) => {
         return index + 1;
@@ -18,7 +17,6 @@ const PaginationContainer = () => {
     const handlePageChange = (pageNumber) => {
         const searchParams = new URLSearchParams(search);
         searchParams.set('page', pageNumber);
-        console.log(`Clicked on the button /n page number is ${pageNumber} and the current page is ${page}`);
         navigate(`${pathname}?${searchParams.toString()}`)
     }
 

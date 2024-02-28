@@ -6,15 +6,47 @@ import { loginUser } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 
 
-
 export const action = (store) => async ({ request }) => {
-    console.log(store);
-    // const formData = await request.formData();
-    // const data = Object.fromEntries(formData);
+
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData);
+    try {
+        const response = await customFetch.post('auth/local', data);
+        store.dispatch(loginUser(response.data))
+        toast.success('You have been logged in successfully!')
+        return redirect('/')
+    } catch (error) {
+        const errorMessage = error?.response?.data?.error?.message || 'Please check you credentials';
+        toast.error(errorMessage)
+
+        return null
+    }
+
+
     return null;
 }
 const Login = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleGuestUser = async () => {
+        try {
+            const response = await customFetch.post('/auth/local', {
+                identifier: 'test@test.com',
+                password: 'secret'
+            })
+
+            dispatch(loginUser(response.data))
+            toast.success("Welcome Guest User")
+            navigate('/')
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error)
+        }
+
+    }
 
 
     return <section className="h-screen grid place-items-center">
@@ -25,17 +57,17 @@ const Login = () => {
             </h4>
 
             <FormInput type='email' label="email"
-                name="identifier" defaultValue="test@test.com" />
+                name="identifier" />
 
             <FormInput type='password' label="password"
-                name="password" defaultValue="secret" />
+                name="password" />
 
             <div className="mt-4">
                 <SubmitButton text="login" />
 
             </div>
             <button type="button" className="btn btn-secondary 
-                    btn-block">
+                    btn-block" onClick={handleGuestUser}>
                 Guest User
             </button>
             <p className="text-center">
